@@ -66,7 +66,10 @@ namespace JakePerry
 
         void IEnumerator.Reset()
         {
-            // Reset the default enumerator to throw an exception if collection is modified (see impl notes at class level).
+            // List<T>.Enumerator.IEnumerator.Reset() implementation will throw an exception if the collection is modified
+            // (see impl notes at class level).
+            // Note: Since we have to cast the struct to IEnumerator to invoke this method, this will not mutate the value
+            // stored in m_enumerator - however this is not an issue.
             ((IEnumerator)m_enumerator).Reset();
 
             m_oneMoreThanIndex = m_list.Count;

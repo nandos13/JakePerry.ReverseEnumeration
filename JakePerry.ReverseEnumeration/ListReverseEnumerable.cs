@@ -12,6 +12,9 @@ namespace JakePerry
     {
         private readonly List<T> m_list;
 
+        /// <summary>
+        /// The <see cref="List{T}"/> targeted by this reversed enumerable.
+        /// </summary>
         public List<T> Target => m_list;
 
         public ListReverseEnumerable(List<T> list)

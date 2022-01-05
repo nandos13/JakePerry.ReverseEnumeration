@@ -6,11 +6,11 @@ A simple package that allows a List&lt;T> to be enumerated in reverse order.
 
 ### Usage
 
+Make sure you include the required namespace
 ```
 using JakePerry;
-
+```
+then simply use the `InReverseOrder()` extension method when enumerating
+```
 foreach (var obj in list.InReverseOrder())
-{
-	// ...
-}
 ```
