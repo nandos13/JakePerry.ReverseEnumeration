@@ -32,6 +32,6 @@ void PrintValues(IEnumerable<string> values)
 }
 ```
 The above code snippet produces the output
->*c*
->*b*
+>*c*<br/>
+>*b*<br/>
 >*a*
