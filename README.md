@@ -31,4 +31,7 @@ void PrintValues(IEnumerable<string> values)
         Console.WriteLine(val);
 }
 ```
-The above code snippet produces the output *cba*
+The above code snippet produces the output
+>*c*
+>*b*
+>*a*
