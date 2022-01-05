@@ -5,16 +5,18 @@
     <LangVersion>9.0</LangVersion>
     <RootNamespace>JakePerry</RootNamespace>
     <Authors>Jake Perry</Authors>
+    <Product>JakePerry.ReverseEnumeration</Product>
+    <AssemblyName>JakePerry.ReverseEnumeration</AssemblyName>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>JakePerry.ReverseEnumeration</PackageId>
-    <Product>JakePerry.ReverseEnumeration</Product>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/nandos13/JakePerry.ReverseEnumeration</PackageProjectUrl>
-    <AssemblyName>JakePerry.ReverseEnumeration</AssemblyName>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/nandos13/JakePerry.ReverseEnumeration</RepositoryUrl>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <NoWarn>1701;1702;CS1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
