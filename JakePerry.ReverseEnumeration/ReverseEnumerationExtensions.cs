@@ -15,7 +15,9 @@ namespace JakePerry
         /// </summary>
         /// <typeparam name="T">List generic type.</typeparam>
         /// <param name="list">The current list.</param>
-        /// <returns>An enumerable object that will enumerate the list in reverse order.</returns>
+        /// <returns>
+        /// An enumerable object that will enumerate the list in reverse order.
+        /// </returns>
         /// <example>
         /// The following code:
         /// <code>
