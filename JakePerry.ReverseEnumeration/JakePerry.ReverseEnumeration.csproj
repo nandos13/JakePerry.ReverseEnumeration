@@ -9,11 +9,12 @@
     <PackageId>JakePerry.ReverseEnumeration</PackageId>
     <Product>JakePerry.ReverseEnumeration</Product>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/nandos13/JakePerry.ReverseEnumeration</PackageProjectUrl>
     <AssemblyName>JakePerry.ReverseEnumeration</AssemblyName>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <NoWarn>1701;1702;CS1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
