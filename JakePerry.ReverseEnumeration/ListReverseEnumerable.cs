@@ -4,33 +4,29 @@ using System.Collections.Generic;
 
 namespace JakePerry
 {
-    /// <summary>
-    /// A simple struct that acts as a wrapper for a list which is to be enumerated in reverse order.
-    /// </summary>
-    /// <typeparam name="T">List generic type.</typeparam>
-    public readonly struct ListReverseEnumerable<T> : IEnumerable<T>, IEnumerable, IEquatable<ListReverseEnumerable<T>>
+    /// <inheritdoc cref="ReverseEnumerable{T}"/>
+    public struct ListReverseEnumerable<T> : IEnumerable<T>, IEnumerable, IEquatable<ListReverseEnumerable<T>>
     {
         private readonly List<T> m_list;
 
-        /// <summary>
-        /// The <see cref="List{T}"/> targeted by this reversed enumerable.
-        /// </summary>
+        /// <inheritdoc cref="ReverseEnumerable{T}.Target"/>
         public List<T> Target => m_list;
+
+        public bool SuppressThrowOnCollectionModified { get; set; }
 
         public ListReverseEnumerable(List<T> list)
         {
             m_list = list;
+            SuppressThrowOnCollectionModified = false;
         }
 
-        /// <summary>
-        /// Returns an enumerator that iterates through the <see cref="List{T}"/> in reverse order.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="ListReverseEnumerator{T}"/> for the <see cref="List{T}"/>.
-        /// </returns>
+        /// <inheritdoc cref="ReverseEnumerable{T}.GetEnumerator()"/>
         public ListReverseEnumerator<T> GetEnumerator()
         {
-            return new ListReverseEnumerator<T>(m_list);
+            return new ListReverseEnumerator<T>(m_list)
+            {
+                SuppressThrowOnCollectionModified = SuppressThrowOnCollectionModified
+            };
         }
 
 #pragma warning disable HAA0601 // Value type to reference type conversion causing boxing allocation
