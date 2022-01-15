@@ -17,10 +17,13 @@ for (int i = list.Count - 1; i >= 0; i--) { ... }
 foreach (var obj in list.InReverseOrder()) { ... }
 ```
 
+
 ### Advantages
 
 #### Immutability
 Methods such as [Array.Reverse](https://docs.microsoft.com/en-us/dotnet/api/system.array.reverse) and [List<T>.Reverse](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1.reverse) mutate the original collection which is not always ideal. The `ReverseEnumerator<T>` does *not* mutate the original collection.
+
+Modifying a `List<T>` while it is being enumerated in a `foreach` loop will result in an `InvalidOperationException` being thrown. The reverse enumerator is able to maintain this logic, providing a guarantee against unintended mutation for the `List<T>` type (This can optionally be disabled, more info [in the *Usage/List<T> and mutability* section below](#list-and-mutability)).
 
 #### Allocations
 The LINQ [Enumerable.Reverse](https://docs.microsoft.com/en-us/dotnet/api/system.linq.enumerable.reverse) extension method:
@@ -30,8 +33,6 @@ The LINQ [Enumerable.Reverse](https://docs.microsoft.com/en-us/dotnet/api/system
 
 The reverse enumerator doesn't allocate any additional memory
 
-#### Modification during enumeration
-Modifying a `List<T>` while it is being enumerated in a `foreach` loop will result in an `InvalidOperationException` being thrown. The reverse enumerator is able to maintain this logic (but can optionally be disabled, more info [in the *Usage/List<T> and modification during enumeration* section below](#list-and-modification-during-enumeration)).
 
 ### Usage
 
@@ -47,14 +48,14 @@ foreach (var obj in list.InReverseOrder()) { ... }
 ```
 The returned struct implements `IEnumerable`, `IEnumerable<T>`, `IReadOnlyCollection<T>` and `IReadOnlyList<T>`, so it can also be passed to any other methods accepting these types as required.
 
-#### List<T> and modification during enumeration
+#### List<T> and mutability
 As mentioned above, reverse-enumerating a `List<T>` will maintain default logic that throws an exception if the collection is modified. This is achieved by using a different enumerator specifically for lists.
 If required, the special-case list enumerator can be converted to a standard reverse enumerator via the `WithoutModifiedChecks` method or with an explicit cast:
 ```
 var list = new List<string>() { "a", "b", "c" };
 
-// Modifying the list in this loop will throw an InvalidOperationException
-foreach (var obj in list.InReverseOrder()) { }
+// Modifying the list in this loop will throw an InvalidOperationException (List<T>.InReverseOrder overload returns special type ListReverseEnumerable<T>)
+foreach (var obj in list.InReverseOrder()) { ... }
 
 // WithoutModifiedChecks converts the enumerable to allow it to be modified in the loop
 foreach (var obj in list.InReverseOrder().WithoutModifiedChecks()) { ... }
