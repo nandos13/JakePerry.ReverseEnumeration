@@ -48,7 +48,7 @@ foreach (var obj in list.InReverseOrder()) { ... }
 ```
 The returned struct implements `IEnumerable`, `IEnumerable<T>`, `IReadOnlyCollection<T>` and `IReadOnlyList<T>`, so it can also be passed to any other methods accepting these types as required.
 
-#### List<T> and mutability
+#### List&lt;T&gt; and mutability
 As mentioned above, reverse-enumerating a `List<T>` will maintain default logic that throws an exception if the collection is modified. This is achieved by using a different enumerator specifically for lists.
 If required, the special-case list enumerator can be converted to a standard reverse enumerator via the `WithoutModifiedChecks` method or with an explicit cast:
 ```
