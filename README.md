@@ -23,10 +23,14 @@ foreach (var obj in list.InReverseOrder()) { ... }
 Methods such as [Array.Reverse](https://docs.microsoft.com/en-us/dotnet/api/system.array.reverse) and [List<T>.Reverse](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1.reverse) mutate the original collection which is not always ideal. The `ReverseEnumerator<T>` does *not* mutate the original collection.
 
 #### Allocations
-The reverse enumerator doesn't allocate any additional memory, unlike the LINQ [Enumerable.Reverse](https://docs.microsoft.com/en-us/dotnet/api/system.linq.enumerable.reverse) extension method which allocates an `IEnumerable` object and clones the collection before iteration.
+The LINQ [Enumerable.Reverse](https://docs.microsoft.com/en-us/dotnet/api/system.linq.enumerable.reverse) extension method:
+- boxes the source enumerable if it's a struct
+- allocates a new enumerable object
+- clones the entire source collection before iteration
+The reverse enumerator doesn't allocate any additional memory
 
 #### Modification during enumeration
-Modifying a `List<T>` while it is being enumerated in a `foreach` loop will result in an `InvalidOperationException` being thrown. This package allows that logic to be maintained while reverse-enumerating the `List<T>`.
+Modifying a `List<T>` while it is being enumerated in a `foreach` loop will result in an `InvalidOperationException` being thrown. The reverse enumerator is able to maintain this logic (but can optionally be disabled, more info [in the Usage section](Usage)).
 
 ### Usage
 
