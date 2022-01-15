@@ -16,13 +16,13 @@ namespace JakePerry
     /// <inheritdoc cref="ReverseEnumerator{T}"/>
     public struct ListReverseEnumerator<T> : IEnumerator<T>, IEnumerator, IDisposable
     {
-        // The list to enumerate
-        private readonly ReverseEnumerator<T> m_reverseEnumerator;
-
         // An enumerator belonging to m_list, created in the constructor. Because 'List<T>._version'
         // is not publicly accessible, this enumerator is used to maintain functionality that throws
         // an exception if the List<T> is modified during enumeration.
         private readonly List<T>.Enumerator m_listEnumerator;
+
+        // The list to enumerate
+        private ReverseEnumerator<T> m_reverseEnumerator;
 
         public T Current => m_reverseEnumerator.Current;
 
