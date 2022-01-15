@@ -27,10 +27,11 @@ The LINQ [Enumerable.Reverse](https://docs.microsoft.com/en-us/dotnet/api/system
 - boxes the source enumerable if it's a struct
 - allocates a new enumerable object
 - clones the entire source collection before iteration
+
 The reverse enumerator doesn't allocate any additional memory
 
 #### Modification during enumeration
-Modifying a `List<T>` while it is being enumerated in a `foreach` loop will result in an `InvalidOperationException` being thrown. The reverse enumerator is able to maintain this logic (but can optionally be disabled, more info [in the Usage section](Usage)).
+Modifying a `List<T>` while it is being enumerated in a `foreach` loop will result in an `InvalidOperationException` being thrown. The reverse enumerator is able to maintain this logic (but can optionally be disabled, more info [in the Usage section](#Usage)).
 
 ### Usage
 
