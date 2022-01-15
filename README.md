@@ -23,7 +23,7 @@ foreach (var obj in list.InReverseOrder()) { ... }
 #### Immutability
 Methods such as [Array.Reverse](https://docs.microsoft.com/en-us/dotnet/api/system.array.reverse) and [List<T>.Reverse](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1.reverse) mutate the original collection which is not always ideal. The `ReverseEnumerator<T>` does *not* mutate the original collection.
 
-Modifying a `List<T>` while it is being enumerated in a `foreach` loop will result in an `InvalidOperationException` being thrown. The reverse enumerator is able to maintain this logic, providing a guarantee against unintended mutation for the `List<T>` type (This can optionally be disabled, more info [in the *Usage/List<T> and mutability* section below](#list-and-mutability)).
+Modifying a `List<T>` while it is being enumerated in a `foreach` loop will result in an `InvalidOperationException` being thrown. The reverse enumerator is able to maintain this logic, providing a guarantee against unintended mutation for the `List<T>` type (This can optionally be disabled, more info [in the *Usage/List<T> and mutability* section below](#listt-and-mutability)).
 
 #### Allocations
 The LINQ [Enumerable.Reverse](https://docs.microsoft.com/en-us/dotnet/api/system.linq.enumerable.reverse) extension method:
