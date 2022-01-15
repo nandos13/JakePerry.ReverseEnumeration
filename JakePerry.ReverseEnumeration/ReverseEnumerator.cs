@@ -11,7 +11,7 @@ namespace JakePerry
     public struct ReverseEnumerator<T> : IEnumerator<T>, IEnumerator, IDisposable
     {
         // The list to enumerate
-        private readonly IList<T> m_list;
+        private readonly ListProxy<T> m_list;
 
         private int m_oneMoreThanIndex;
         private T m_current;
@@ -24,13 +24,21 @@ namespace JakePerry
 
 #pragma warning restore HAA0601
 
-        public ReverseEnumerator(IList<T> list)
+        internal ReverseEnumerator(ListProxy<T> list)
         {
             m_list = list;
 
             m_oneMoreThanIndex = list.Count;
             m_current = default;
         }
+
+        public ReverseEnumerator(IList<T> list) : this(new ListProxy<T>(list)) { }
+
+        public ReverseEnumerator(IReadOnlyList<T> list) : this(new ListProxy<T>(list)) { }
+
+        public ReverseEnumerator(List<T> list) : this(new ListProxy<T>(list)) { }
+
+        public ReverseEnumerator(T[] list) : this(new ListProxy<T>(list)) { }
 
         public bool MoveNext()
         {
@@ -50,10 +58,15 @@ namespace JakePerry
 
         public void Dispose() { /* Do nothing. */ }
 
-        void IEnumerator.Reset()
+        internal void Reset()
         {
             m_oneMoreThanIndex = m_list.Count;
             m_current = default;
+        }
+
+        void IEnumerator.Reset()
+        {
+            Reset();
         }
     }
 }

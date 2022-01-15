@@ -17,73 +17,57 @@ namespace JakePerry
     public struct ListReverseEnumerator<T> : IEnumerator<T>, IEnumerator, IDisposable
     {
         // The list to enumerate
-        private readonly List<T> m_list;
+        private readonly ReverseEnumerator<T> m_reverseEnumerator;
 
         // An enumerator belonging to m_list, created in the constructor. Because 'List<T>._version'
         // is not publicly accessible, this enumerator is used to maintain functionality that throws
         // an exception if the List<T> is modified during enumeration.
-        private readonly List<T>.Enumerator m_enumerator;
+        private readonly List<T>.Enumerator m_listEnumerator;
 
-        private int m_oneMoreThanIndex;
-        private T m_current;
-
-        public T Current => m_current;
-
-        public bool SuppressThrowOnCollectionModified { get; set; }
+        public T Current => m_reverseEnumerator.Current;
 
 #pragma warning disable HAA0601 // Value type to reference type conversion causing boxing allocation
 
-        object IEnumerator.Current => m_current;
+        object IEnumerator.Current => m_reverseEnumerator.Current;
 
 #pragma warning restore HAA0601
 
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if the collection has been modified during enumeration.
+        /// </exception>
+        private void PerformVersionCheck()
+        {
+            // List<T>.Enumerator.MoveNext() will perform a version check and throw an InvalidOperationException
+            // if the collection has been modified since the enumerator was created.
+            m_listEnumerator.MoveNext();
+        }
+
         public ListReverseEnumerator(List<T> list)
         {
-            m_list = list;
-            m_enumerator = list.GetEnumerator();
-            SuppressThrowOnCollectionModified = false;
+            if (list is null)
+            {
+                this = default;
+                return;
+            }
 
-            m_oneMoreThanIndex = list.Count;
-            m_current = default;
+            m_reverseEnumerator = new ReverseEnumerator<T>(list);
+            m_listEnumerator = list.GetEnumerator();
         }
 
         public bool MoveNext()
         {
-            if (!SuppressThrowOnCollectionModified)
-            {
-                // Invoke MoveNext on default enumerator to throw an exception if collection is modified (see m_enumerator comment).
-                m_enumerator.MoveNext();
-            }
+            PerformVersionCheck();
 
-            if ((uint)m_oneMoreThanIndex > 0)
-            {
-                int index = --m_oneMoreThanIndex;
-                m_current = m_list[index];
-
-                return true;
-            }
-
-            m_oneMoreThanIndex = 0;
-            m_current = default;
-
-            return false;
+            return m_reverseEnumerator.MoveNext();
         }
 
         public void Dispose() { /* Do nothing. */ }
 
         void IEnumerator.Reset()
         {
-            if (!SuppressThrowOnCollectionModified)
-            {
-                // List<T>.Enumerator.IEnumerator.Reset() implementation will throw an exception if the collection is modified
-                // (see m_enumerator comment).
-                // Note: Since we have to cast the struct to IEnumerator to invoke this method, this will not mutate the value
-                // stored in m_enumerator - however this is not an issue.
-                ((IEnumerator)m_enumerator).Reset();
-            }
+            PerformVersionCheck();
 
-            m_oneMoreThanIndex = m_list.Count;
-            m_current = default;
+            m_reverseEnumerator.Reset();
         }
     }
 }

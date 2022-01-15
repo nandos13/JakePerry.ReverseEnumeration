@@ -4,21 +4,16 @@ namespace JakePerry
 {
     public static class ReverseEnumerationExtensions
     {
-        /// <remarks>
-        /// Note: This method will incur boxing. Consider casting <paramref name="list"/> to
-        /// a <see cref="List{T}"/> or an array first where possible.
-        /// </remarks>
         /// <inheritdoc cref="ReverseEnumerable{T}.GetEnumerator()"/>
-        public static IEnumerator<T> GetReverseEnumerator<T>(this IList<T> list)
+        public static ReverseEnumerator<T> GetReverseEnumerator<T>(this IList<T> list)
         {
-#pragma warning disable HAA0601 // Value type to reference type conversion causing boxing allocation
-
-            if (list is List<T> listT)
-                return new ListReverseEnumerable<T>(listT).GetEnumerator();
-
             return new ReverseEnumerable<T>(list).GetEnumerator();
+        }
 
-#pragma warning restore HAA0601
+        /// <inheritdoc cref="ReverseEnumerable{T}.GetEnumerator()"/>
+        public static ReverseEnumerator<T> GetReverseEnumerator<T>(this IReadOnlyList<T> list)
+        {
+            return new ReverseEnumerable<T>(list).GetEnumerator();
         }
 
         /// <inheritdoc cref="ListReverseEnumerable{T}.GetEnumerator()"/>
@@ -49,20 +44,25 @@ namespace JakePerry
         /// </example>
         public static ReverseEnumerable<T> InReverseOrder<T>(this IList<T> source)
         {
-            return new ReverseEnumerable<T>(source);
+            return new ReverseEnumerable<T>(new ListProxy<T>(source));
         }
 
-        /// <param name="source">The current collection.</param>
-        /// <param name="throwOnCollectionModified">
-        /// Indicates whether an exception should be thrown if the collection is modified during iteration.
-        /// </param>
         /// <inheritdoc cref="InReverseOrder{T}(IList{T})"/>
-        public static ListReverseEnumerable<T> InReverseOrder<T>(this List<T> source, bool throwOnCollectionModified = true)
+        public static ReverseEnumerable<T> InReverseOrder<T>(this IReadOnlyList<T> source)
         {
-            return new ListReverseEnumerable<T>(source)
-            {
-                SuppressThrowOnCollectionModified = !throwOnCollectionModified
-            };
+            return new ReverseEnumerable<T>(new ListProxy<T>(source));
+        }
+
+        /// <inheritdoc cref="InReverseOrder{T}(IList{T})"/>
+        public static ListReverseEnumerable<T> InReverseOrder<T>(this List<T> source)
+        {
+            return new ListReverseEnumerable<T>(source);
+        }
+
+        /// <inheritdoc cref="InReverseOrder{T}(IList{T})"/>
+        public static ReverseEnumerable<T> InReverseOrder<T>(this T[] source)
+        {
+            return new ReverseEnumerable<T>(source);
         }
     }
 }

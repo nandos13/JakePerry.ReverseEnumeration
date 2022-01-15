@@ -5,22 +5,34 @@ using System.Collections.Generic;
 namespace JakePerry
 {
     /// <summary>
-    /// A simple struct that acts as a wrapper for a collection which is to be enumerated in reverse order.
+    /// An enumerable that wraps an <see cref="IList{T}"/> to be enumerated in reverse order.
     /// </summary>
     /// <typeparam name="T">The collection's element type.</typeparam>
-    public readonly struct ReverseEnumerable<T> : IEnumerable<T>, IEnumerable, IEquatable<ReverseEnumerable<T>>
+    public readonly struct ReverseEnumerable<T> :
+        IEnumerable,
+        IEnumerable<T>,
+        IReadOnlyCollection<T>,
+        IReadOnlyList<T>,
+        IEquatable<ReverseEnumerable<T>>
     {
-        private readonly IList<T> m_list;
+        private readonly ListProxy<T> m_list;
 
-        /// <summary>
-        /// The collection targeted by this reversed enumerable.
-        /// </summary>
-        public IList<T> Target => m_list;
+        public int Count => m_list.Count;
 
-        public ReverseEnumerable(IList<T> list)
+        public T this[int index] => m_list[index];
+
+        internal ReverseEnumerable(ListProxy<T> list)
         {
             m_list = list;
         }
+
+        public ReverseEnumerable(IList<T> list) : this(new ListProxy<T>(list)) { }
+
+        public ReverseEnumerable(IReadOnlyList<T> list) : this(new ListProxy<T>(list)) { }
+
+        public ReverseEnumerable(List<T> list) : this((IReadOnlyList<T>)list) { }
+
+        public ReverseEnumerable(T[] list) : this((IReadOnlyList<T>)list) { }
 
         /// <returns>
         /// An enumerator that iterates through the collection in reverse order.
@@ -50,7 +62,7 @@ namespace JakePerry
 
         public override int GetHashCode()
         {
-            return m_list?.GetHashCode() ?? -1;
+            return m_list.GetHashCode();
         }
 
         public static bool operator ==(ReverseEnumerable<T> left, ReverseEnumerable<T> right)
@@ -61,11 +73,6 @@ namespace JakePerry
         public static bool operator !=(ReverseEnumerable<T> left, ReverseEnumerable<T> right)
         {
             return !(left == right);
-        }
-
-        public static ReverseEnumerable<T> Create(IList<T> list)
-        {
-            return new ReverseEnumerable<T>(list);
         }
     }
 }
