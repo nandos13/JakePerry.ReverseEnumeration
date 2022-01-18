@@ -19,7 +19,7 @@ namespace JakePerry
 
         public int Count => m_list.Count;
 
-        public T this[int index] => m_list[index];
+        public T this[int index] => m_list[m_list.Count - 1 - index];
 
         internal ReverseEnumerable(ListProxy<T> list)
         {

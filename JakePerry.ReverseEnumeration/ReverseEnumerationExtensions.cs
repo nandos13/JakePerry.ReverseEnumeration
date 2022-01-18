@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace JakePerry
 {
@@ -26,6 +27,12 @@ namespace JakePerry
         public static ReverseEnumerator<T> GetReverseEnumerator<T>(this T[] array)
         {
             return new ReverseEnumerable<T>(array).GetEnumerator();
+        }
+
+        /// <inheritdoc cref="ReverseEnumerable{T}.GetEnumerator()"/>
+        public static ArraySegmentReverseEnumerator<T> GetReverseEnumerator<T>(this ArraySegment<T> arraySegment)
+        {
+            return new ArraySegmentReverseEnumerable<T>(arraySegment).GetEnumerator();
         }
 
         /// <summary>
@@ -63,6 +70,12 @@ namespace JakePerry
         public static ReverseEnumerable<T> InReverseOrder<T>(this T[] source)
         {
             return new ReverseEnumerable<T>(source);
+        }
+
+        /// <inheritdoc cref="InReverseOrder{T}(IList{T})"/>
+        public static ArraySegmentReverseEnumerable<T> InReverseOrder<T>(this ArraySegment<T> source)
+        {
+            return new ArraySegmentReverseEnumerable<T>(source);
         }
     }
 }

@@ -30,7 +30,7 @@ namespace JakePerry
             {
                 if (m_list is null)
                     throw new InvalidOperationException("Can't use indexer; list has not been initialized.");
-                return m_list[index];
+                return m_list[m_list.Count - 1 - index];
             }
         }
 
@@ -48,6 +48,7 @@ namespace JakePerry
             return new ReverseEnumerable<T>(m_list);
         }
 
+        /// <inheritdoc cref="ReverseEnumerable{T}.GetEnumerator"/>
         public ListReverseEnumerator<T> GetEnumerator()
         {
             return new ListReverseEnumerator<T>(m_list);

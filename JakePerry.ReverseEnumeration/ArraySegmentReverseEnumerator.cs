@@ -5,16 +5,15 @@ using System.Collections.Generic;
 namespace JakePerry
 {
     /// <summary>
-    /// Enumerates the elements of a list in reverse order.
+    /// Enumerates the elements of the array delimited by an <see cref="ArraySegment{T}"/> in reverse order.
     /// </summary>
     /// <typeparam name="T">The collection's element type.</typeparam>
-    public struct ReverseEnumerator<T> :
+    public struct ArraySegmentReverseEnumerator<T> :
         IEnumerator,
         IEnumerator<T>,
         IDisposable
     {
-        // The list to enumerate
-        private readonly ListProxy<T> m_list;
+        private readonly ArraySegment<T> m_arraySegment;
 
         private int m_oneMoreThanIndex;
         private T m_current;
@@ -27,28 +26,21 @@ namespace JakePerry
 
 #pragma warning restore HAA0601
 
-        internal ReverseEnumerator(ListProxy<T> list)
+        public ArraySegmentReverseEnumerator(ArraySegment<T> arraySegment)
         {
-            m_list = list;
+            m_arraySegment = arraySegment;
 
-            m_oneMoreThanIndex = list.Count;
+            m_oneMoreThanIndex = arraySegment.Count;
             m_current = default;
         }
-
-        public ReverseEnumerator(IList<T> list) : this(new ListProxy<T>(list)) { }
-
-        public ReverseEnumerator(IReadOnlyList<T> list) : this(new ListProxy<T>(list)) { }
-
-        public ReverseEnumerator(List<T> list) : this(new ListProxy<T>(list)) { }
-
-        public ReverseEnumerator(T[] list) : this(new ListProxy<T>(list)) { }
 
         public bool MoveNext()
         {
             if (m_oneMoreThanIndex > 0)
             {
                 int index = --m_oneMoreThanIndex;
-                m_current = m_list[index];
+                index += m_arraySegment.Offset;
+                m_current = m_arraySegment.Array[index];
 
                 return true;
             }
@@ -63,7 +55,7 @@ namespace JakePerry
 
         public void Reset()
         {
-            m_oneMoreThanIndex = m_list.Count;
+            m_oneMoreThanIndex = m_arraySegment.Count;
             m_current = default;
         }
     }

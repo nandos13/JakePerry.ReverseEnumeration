@@ -63,7 +63,7 @@ namespace JakePerry
 
         public void Dispose() { /* Do nothing. */ }
 
-        void IEnumerator.Reset()
+        public void Reset()
         {
             PerformVersionCheck();
 
