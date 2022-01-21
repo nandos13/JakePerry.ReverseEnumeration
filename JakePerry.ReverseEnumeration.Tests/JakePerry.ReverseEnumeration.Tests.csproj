@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="ArraySegmentReverseEnumerableTests.cs" />
     <Compile Include="ListReverseEnumerableTests.cs" />
+    <Compile Include="ReadonlyReverseEnumerableTests.cs" />
     <Compile Include="ReverseEnumerableTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helpers.cs" />

@@ -12,9 +12,9 @@ namespace JakePerry
         }
 
         /// <inheritdoc cref="ReverseEnumerable{T}.GetEnumerator()"/>
-        public static ReverseEnumerator<T> GetReverseEnumerator<T>(this IReadOnlyList<T> list)
+        public static ReadonlyReverseEnumerator<T> GetReverseEnumerator<T>(this IReadOnlyList<T> list)
         {
-            return new ReverseEnumerable<T>(list).GetEnumerator();
+            return new ReadonlyReverseEnumerable<T>(list).GetEnumerator();
         }
 
         /// <inheritdoc cref="ListReverseEnumerable{T}.GetEnumerator()"/>
@@ -51,13 +51,13 @@ namespace JakePerry
         /// </example>
         public static ReverseEnumerable<T> InReverseOrder<T>(this IList<T> source)
         {
-            return new ReverseEnumerable<T>(new ListProxy<T>(source));
+            return new ReverseEnumerable<T>(source);
         }
 
         /// <inheritdoc cref="InReverseOrder{T}(IList{T})"/>
-        public static ReverseEnumerable<T> InReverseOrder<T>(this IReadOnlyList<T> source)
+        public static ReadonlyReverseEnumerable<T> InReverseOrder<T>(this IReadOnlyList<T> source)
         {
-            return new ReverseEnumerable<T>(new ListProxy<T>(source));
+            return new ReadonlyReverseEnumerable<T>(source);
         }
 
         /// <inheritdoc cref="InReverseOrder{T}(IList{T})"/>

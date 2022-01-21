@@ -67,6 +67,24 @@ namespace JakePerry.ReverseEnumerable.Benchmarks
         }
 
         [Benchmark]
+        public void ReadonlyReverseEnumerable()
+        {
+            var reverseEnumerable = new ReadonlyReverseEnumerable<object>(m_list);
+            foreach (var obj in reverseEnumerable)
+            { }
+        }
+
+        [Benchmark]
+        public void ReadonlyReverseEnumerator()
+        {
+            var enumerator = new ReadonlyReverseEnumerator<object>(m_list);
+            while (enumerator.MoveNext())
+            {
+                var current = enumerator.Current;
+            }
+        }
+
+        [Benchmark]
         public void ListReverseEnumerable()
         {
             var reverseEnumerable = new ListReverseEnumerable<object>(m_list);

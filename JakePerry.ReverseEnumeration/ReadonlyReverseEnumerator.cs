@@ -5,16 +5,16 @@ using System.Collections.Generic;
 namespace JakePerry
 {
     /// <summary>
-    /// Enumerates the elements of an <see cref="IList{T}"/> in reverse order.
+    /// Enumerates the elements of am <see cref="IReadOnlyList{T}"/> in reverse order.
     /// </summary>
     /// <typeparam name="T">The collection's element type.</typeparam>
-    public struct ReverseEnumerator<T> :
+    public struct ReadonlyReverseEnumerator<T> :
         IEnumerator,
         IEnumerator<T>,
         IDisposable
     {
         // The list to enumerate
-        private readonly IList<T> m_list;
+        private readonly IReadOnlyList<T> m_list;
 
         private int m_index;
 
@@ -37,15 +37,15 @@ namespace JakePerry
 
 #pragma warning restore HAA0601
 
-        public ReverseEnumerator(IList<T> list)
+        public ReadonlyReverseEnumerator(IReadOnlyList<T> list)
         {
             m_list = list;
             m_index = list?.Count ?? 0;
         }
 
-        public ReverseEnumerator(List<T> list) : this((IList<T>)list) { }
+        public ReadonlyReverseEnumerator(List<T> list) : this((IReadOnlyList<T>)list) { }
 
-        public ReverseEnumerator(T[] list) : this((IList<T>)list) { }
+        public ReadonlyReverseEnumerator(T[] list) : this((IReadOnlyList<T>)list) { }
 
         public bool MoveNext()
         {
