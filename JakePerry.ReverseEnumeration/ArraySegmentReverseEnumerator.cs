@@ -15,14 +15,24 @@ namespace JakePerry
     {
         private readonly ArraySegment<T> m_arraySegment;
 
-        private int m_oneMoreThanIndex;
-        private T m_current;
+        private int m_index;
 
-        public T Current => m_current;
+        public T Current
+        {
+            get
+            {
+                var index = m_index;
+
+                if (index < 0 || index >= m_arraySegment.Count)
+                    return default;
+
+                return m_arraySegment.Array[index + m_arraySegment.Offset];
+            }
+        }
 
 #pragma warning disable HAA0601 // Value type to reference type conversion causing boxing allocation
 
-        object IEnumerator.Current => m_current;
+        object IEnumerator.Current => this.Current;
 
 #pragma warning restore HAA0601
 
@@ -30,24 +40,18 @@ namespace JakePerry
         {
             m_arraySegment = arraySegment;
 
-            m_oneMoreThanIndex = arraySegment.Count;
-            m_current = default;
+            m_index = arraySegment.Count;
         }
 
         public bool MoveNext()
         {
-            if (m_oneMoreThanIndex > 0)
+            if (m_index > 0)
             {
-                int index = --m_oneMoreThanIndex;
-                index += m_arraySegment.Offset;
-                m_current = m_arraySegment.Array[index];
-
+                --m_index;
                 return true;
             }
 
-            m_oneMoreThanIndex = 0;
-            m_current = default;
-
+            m_index = -1;
             return false;
         }
 
@@ -55,8 +59,7 @@ namespace JakePerry
 
         public void Reset()
         {
-            m_oneMoreThanIndex = m_arraySegment.Count;
-            m_current = default;
+            m_index = m_arraySegment.Count;
         }
     }
 }
