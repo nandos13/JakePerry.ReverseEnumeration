@@ -73,20 +73,20 @@ List size: 16
 ```md
 |                         Method |      Mean |    Error |   StdDev | Allocated |
 |------------------------------- |----------:|---------:|---------:|----------:|
-|                        ForLoop |  12.78 ns | 0.285 ns | 0.452 ns |         - |
-|           Standard_ForeachLoop |  61.29 ns | 0.473 ns | 0.369 ns |         - |
-|           Reversed_ForeachLoop |  85.82 ns | 1.703 ns | 2.387 ns |         - |
-| Immutable_Reversed_ForeachLoop | 330.10 ns | 6.538 ns | 7.267 ns |         - |
+|                        ForLoop |  12.34 ns | 0.044 ns | 0.041 ns |         - |
+|           Standard_ForeachLoop |  61.47 ns | 0.919 ns | 0.860 ns |         - |
+|           Reversed_ForeachLoop |  83.78 ns | 0.246 ns | 0.218 ns |         - |
+| Immutable_Reversed_ForeachLoop | 269.17 ns | 1.537 ns | 1.200 ns |         - |
 ```
 
 List size: 4096
 ```md
 |                         Method |      Mean |     Error |    StdDev | Allocated |
 |------------------------------- |----------:|----------:|----------:|----------:|
-|                        ForLoop |  2.636 us | 0.0213 us | 0.0178 us |         - |
-|           Standard_ForeachLoop | 11.187 us | 0.2159 us | 0.3838 us |         - |
-|           Reversed_ForeachLoop | 17.622 us | 0.3490 us | 0.6806 us |         - |
-| Immutable_Reversed_ForeachLoop | 70.890 us | 0.8108 us | 0.6770 us |         - |
+|                        ForLoop |  2.618 us | 0.0089 us | 0.0079 us |         - |
+|           Standard_ForeachLoop | 10.657 us | 0.0562 us | 0.0439 us |         - |
+|           Reversed_ForeachLoop | 16.939 us | 0.0753 us | 0.0704 us |         - |
+| Immutable_Reversed_ForeachLoop | 57.818 us | 0.3556 us | 0.3152 us |         - |
 ```
 
 ###### ArraySegment enumeration benchmarks
