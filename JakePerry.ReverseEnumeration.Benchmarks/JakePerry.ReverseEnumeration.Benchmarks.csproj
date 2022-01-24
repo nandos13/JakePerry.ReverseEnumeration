@@ -252,9 +252,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArraySegmentBenchmarks.cs" />
     <Compile Include="BenchmarkConsoleApp.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReverseEnumerableBenchmarks.cs" />
+    <Compile Include="ListBenchmarks.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

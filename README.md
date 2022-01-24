@@ -9,12 +9,15 @@ A simple package that makes enumerating collections in reverse order easy.
 
 Manually enumerating a collection in reverse order can feel tedious and can be prone to index errors (forget the `-1` in the initializer section or the `>=` in the condition and you'll run into an `ArgumentOutOfRangeException` or miss the first element).
 A `foreach` loop is cleaner and convenient.
-```
+```cs
 // Traditional reverse for-loop
-for (int i = list.Count - 1; i >= 0; i--) { ... }
+for (int i = list.Count - 1; i >= 0; i--)
+{
+    var obj = list[i];
+}
 
 // New foreach loop
-foreach (var obj in list.InReverseOrder()) { ... }
+foreach (var obj in list.Reversed()) { ... }
 ```
 
 
@@ -23,7 +26,8 @@ foreach (var obj in list.InReverseOrder()) { ... }
 #### Immutability
 Methods such as [Array.Reverse](https://docs.microsoft.com/en-us/dotnet/api/system.array.reverse) and [List<T>.Reverse](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1.reverse) mutate the original collection which is not always ideal. The `ReverseEnumerator<T>` does *not* mutate the original collection.
 
-Modifying a `List<T>` while it is being enumerated in a `foreach` loop will result in an `InvalidOperationException` being thrown. The reverse enumerator is able to maintain this logic, providing a guarantee against unintended mutation for the `List<T>` type (This can optionally be disabled, more info [in the *Usage/List<T> and mutability* section below](#listt-and-mutability)).
+This package also offers the option to maintain list immutability during reverse-enumeration with the use of the `List<T>.ReversedImmutable` extension method. When this method is used, an `InvalidOperationException` will be thrown if the list is modified during enumeration, matching the behavior of the default `List<T>.Enumerator` type.
+More info [in the *Usage/List<T> and mutability* section below](#listt-and-mutability).
 
 #### Allocations
 The LINQ [Enumerable.Reverse](https://docs.microsoft.com/en-us/dotnet/api/system.linq.enumerable.reverse) extension method:
@@ -31,35 +35,73 @@ The LINQ [Enumerable.Reverse](https://docs.microsoft.com/en-us/dotnet/api/system
 - allocates a new enumerable object
 - clones the entire source collection before iteration
 
-The reverse enumerator doesn't allocate any additional memory
+The reverse enumerator doesn't allocate any additional memory. The package takes advantage of a compiler optimization by directly returning a value-type enumerator in the `GetEnumerator()` methods.
 
 
 ### Usage
 
 The code lives in the `JakePerry` namespace, so make sure you include it.
-```
+```cs
 using JakePerry;
 ```
 
-Any collection implementing the `IList<T>` or `IReadOnlyList<T>` interface can be enumerated in reverse order via the `InReverseOrder()` extension method.
+Any collection implementing the `IList<T>` or `IReadOnlyList<T>` interface can be enumerated in reverse order via the `Reversed()` extension method. `ArraySegment<T>` is also supported.
+
 Most commonly, this is used directly in a `foreach` loop
+```cs
+foreach (var obj in list.Reversed()) { ... }
 ```
-foreach (var obj in list.InReverseOrder()) { ... }
-```
-The returned struct implements `IEnumerable`, `IEnumerable<T>`, `IReadOnlyCollection<T>` and `IReadOnlyList<T>`, so it can also be passed to any other methods accepting these types as required.
+The returned struct implements `IEnumerable`, `IEnumerable<T>`, `IReadOnlyCollection<T>` and `IReadOnlyList<T>`, so it can also be passed to any other methods accepting these types as required, at the cost of boxing the object.
 
 #### List&lt;T&gt; and mutability
-As mentioned above, reverse-enumerating a `List<T>` will maintain default logic that throws an exception if the collection is modified. This is achieved by using a different enumerator specifically for lists.
-If required, the special-case list enumerator can be converted to a standard reverse enumerator via the `WithoutModifiedChecks` method or with an explicit cast:
-```
+As mentioned above, it's possible to guarantee immutability for the `List<T>` type during reverse-enumeration, just as regular enumeration does. The `ReversedImmutable()` extension method uses a special enumerator
+that performs the additional checks required & throws an `InvalidOperationException` if it's modified during enumeration. Note that this additional overhead is costly ([see benchmarks below](#benchmarks))
+```cs
 var list = new List<string>() { "a", "b", "c" };
 
-// Modifying the list in this loop will throw an InvalidOperationException (List<T>.InReverseOrder overload returns special type ListReverseEnumerable<T>)
-foreach (var obj in list.InReverseOrder()) { ... }
+// Using the Reversed method, the list can be modified as required
+foreach (var obj in list.Reversed()) { ... }
 
-// WithoutModifiedChecks converts the enumerable to allow it to be modified in the loop
-foreach (var obj in list.InReverseOrder().WithoutModifiedChecks()) { ... }
+// Using the ReversedImmutable method, modification during enumeration will cause an InvalidOperationException
+foreach (var obj in list.ReversedImmutable()) { ... }
+```
 
-// We can also explicitly cast the enumerable to ReverseEnumerable<T>
-foreach (var obj in (ReverseEnumerable<T>)list.InReverseOrder()) { ... }
+### Benchmarks
+
+###### List enumeration benchmarks
+List size: 16
+```md
+|                         Method |      Mean |    Error |   StdDev | Allocated |
+|------------------------------- |----------:|---------:|---------:|----------:|
+|                        ForLoop |  12.78 ns | 0.285 ns | 0.452 ns |         - |
+|           Standard_ForeachLoop |  61.29 ns | 0.473 ns | 0.369 ns |         - |
+|           Reversed_ForeachLoop |  85.82 ns | 1.703 ns | 2.387 ns |         - |
+| Immutable_Reversed_ForeachLoop | 330.10 ns | 6.538 ns | 7.267 ns |         - |
+```
+
+List size: 4096
+```md
+|                         Method |      Mean |     Error |    StdDev | Allocated |
+|------------------------------- |----------:|----------:|----------:|----------:|
+|                        ForLoop |  2.636 us | 0.0213 us | 0.0178 us |         - |
+|           Standard_ForeachLoop | 11.187 us | 0.2159 us | 0.3838 us |         - |
+|           Reversed_ForeachLoop | 17.622 us | 0.3490 us | 0.6806 us |         - |
+| Immutable_Reversed_ForeachLoop | 70.890 us | 0.8108 us | 0.6770 us |         - |
+```
+
+###### ArraySegment enumeration benchmarks
+ArraySegment count: 16
+```md
+|               Method |      Mean |     Error |    StdDev |    Median | Allocated |
+|--------------------- |----------:|----------:|----------:|----------:|----------:|
+|              ForLoop |  7.625 ns | 0.1795 ns | 0.3237 ns |  7.466 ns |         - |
+| Reversed_ForeachLoop | 60.111 ns | 1.2133 ns | 2.0272 ns | 59.453 ns |         - |
+```
+
+ArraySegment count: 4096
+```md
+|               Method |      Mean |     Error |    StdDev | Allocated |
+|--------------------- |----------:|----------:|----------:|----------:|
+|              ForLoop |  1.332 us | 0.0211 us | 0.0234 us |         - |
+| Reversed_ForeachLoop | 11.178 us | 0.2232 us | 0.3909 us |         - |
 ```

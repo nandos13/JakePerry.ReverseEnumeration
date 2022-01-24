@@ -9,16 +9,16 @@ namespace JakePerry
     /// </summary>
     /// <remarks>
     /// By default, enumerating this object will use an enumerator that throws an exception if the
-    /// collection is modified. Use the <see cref="WithoutModifiedChecks"/> method to convert to an enumerable
+    /// collection is modified. Use the <see cref="AsMutable"/> method to convert to an enumerable
     /// that does not perform these checks.
     /// </remarks>
     /// <typeparam name="T">The collection's element type.</typeparam>
-    public readonly struct ListReverseEnumerable<T> :
+    public readonly struct ImmutableListReverseEnumerable<T> :
         IEnumerable,
         IEnumerable<T>,
         IReadOnlyCollection<T>,
         IReadOnlyList<T>,
-        IEquatable<ListReverseEnumerable<T>>
+        IEquatable<ImmutableListReverseEnumerable<T>>
     {
         private readonly List<T> m_list;
 
@@ -34,7 +34,7 @@ namespace JakePerry
             }
         }
 
-        public ListReverseEnumerable(List<T> list)
+        public ImmutableListReverseEnumerable(List<T> list)
         {
             m_list = list;
         }
@@ -43,15 +43,15 @@ namespace JakePerry
         /// Convert this enumerable to one that will not throw an exception if the list
         /// is modified during enumeration.
         /// </summary>
-        public ReverseEnumerable<T> WithoutModifiedChecks()
+        public ReverseEnumerable<T> AsMutable()
         {
             return new ReverseEnumerable<T>(m_list);
         }
 
         /// <inheritdoc cref="ReverseEnumerable{T}.GetEnumerator"/>
-        public ListReverseEnumerator<T> GetEnumerator()
+        public ImmutableListReverseEnumerator<T> GetEnumerator()
         {
-            return new ListReverseEnumerator<T>(m_list);
+            return new ImmutableListReverseEnumerator<T>(m_list);
         }
 
 #pragma warning disable HAA0601 // Value type to reference type conversion causing boxing allocation
@@ -62,14 +62,14 @@ namespace JakePerry
 
 #pragma warning restore HAA0601
 
-        public bool Equals(ListReverseEnumerable<T> other)
+        public bool Equals(ImmutableListReverseEnumerable<T> other)
         {
             return m_list == other.m_list;
         }
 
         public override bool Equals(object obj)
         {
-            return (obj is ListReverseEnumerable<T> other) && Equals(other);
+            return (obj is ImmutableListReverseEnumerable<T> other) && Equals(other);
         }
 
         public override int GetHashCode()
@@ -77,17 +77,17 @@ namespace JakePerry
             return m_list?.GetHashCode() ?? -1;
         }
 
-        public static explicit operator ReverseEnumerable<T>(ListReverseEnumerable<T> src)
+        public static explicit operator ReverseEnumerable<T>(ImmutableListReverseEnumerable<T> src)
         {
-            return src.WithoutModifiedChecks();
+            return src.AsMutable();
         }
 
-        public static bool operator ==(ListReverseEnumerable<T> left, ListReverseEnumerable<T> right)
+        public static bool operator ==(ImmutableListReverseEnumerable<T> left, ImmutableListReverseEnumerable<T> right)
         {
             return left.Equals(right);
         }
 
-        public static bool operator !=(ListReverseEnumerable<T> left, ListReverseEnumerable<T> right)
+        public static bool operator !=(ImmutableListReverseEnumerable<T> left, ImmutableListReverseEnumerable<T> right)
         {
             return !(left == right);
         }

@@ -7,12 +7,12 @@ using static JakePerry.ReverseEnumeration.Tests.Helpers;
 namespace JakePerry.ReverseEnumeration.Tests
 {
     [TestClass]
-    public class ListReverseEnumerableTests
+    public class ImmutableListReverseEnumerableTests
     {
         [TestMethod("Empty enumerable")]
         public void TestMethod_EmptyDoesNotEnumerate()
         {
-            var reverseEnumerable = new ListReverseEnumerable<string>(new List<string>());
+            var reverseEnumerable = new ImmutableListReverseEnumerable<string>(new List<string>());
 
             foreach (var e in reverseEnumerable)
             {
@@ -24,14 +24,14 @@ namespace JakePerry.ReverseEnumeration.Tests
         [TestMethod("Empty enumerator")]
         public void TestMethod_EmptyDoesNotMoveNext()
         {
-            var enumerator = new ListReverseEnumerator<string>(new List<string>());
+            var enumerator = new ImmutableListReverseEnumerator<string>(new List<string>());
             Assert.IsFalse(enumerator.MoveNext());
         }
 
         [TestMethod("Order reversed")]
         public void TestMethod_OrderReversed()
         {
-            var enumerator = new ListReverseEnumerator<string>(new List<string>(GetAbcArray()));
+            var enumerator = new ImmutableListReverseEnumerator<string>(new List<string>(GetAbcArray()));
 
             // Current should return "c", "b", "a" in that order
             Assert.IsTrue(enumerator.MoveNext());
@@ -51,7 +51,7 @@ namespace JakePerry.ReverseEnumeration.Tests
         public void TestMethod_ForeachOrderReversed()
         {
             var sourceArray = GetAbcArray();
-            var reverseEnumerable = new ListReverseEnumerable<string>(new List<string>(sourceArray));
+            var reverseEnumerable = new ImmutableListReverseEnumerable<string>(new List<string>(sourceArray));
 
             int i = sourceArray.Length - 1;
             foreach (var obj in reverseEnumerable)
@@ -64,7 +64,7 @@ namespace JakePerry.ReverseEnumeration.Tests
         public void TestMethod_Indexer()
         {
             var source = new List<string>(GetAbcArray());
-            var reverseEnumerable = new ListReverseEnumerable<string>(source);
+            var reverseEnumerable = new ImmutableListReverseEnumerable<string>(source);
 
             Assert.AreEqual(source.Count, reverseEnumerable.Count);
 
@@ -77,7 +77,7 @@ namespace JakePerry.ReverseEnumeration.Tests
         public void TestMethod_IndexerLowerBoundThrows()
         {
             var source = new List<string>(GetAbcArray());
-            var reverseEnumerable = new ListReverseEnumerable<string>(source);
+            var reverseEnumerable = new ImmutableListReverseEnumerable<string>(source);
 
             string value = reverseEnumerable[-1];
             Assert.Fail("Accessing invalid index (less than zero) did not throw an exception.");
@@ -88,7 +88,7 @@ namespace JakePerry.ReverseEnumeration.Tests
         public void TestMethod_IndexerUpperBoundThrows()
         {
             var source = new List<string>(GetAbcArray());
-            var reverseEnumerable = new ListReverseEnumerable<string>(source);
+            var reverseEnumerable = new ImmutableListReverseEnumerable<string>(source);
 
             string value = reverseEnumerable[source.Count];
             Assert.Fail("Accessing invalid index (greater than last index) did not throw an exception.");
@@ -99,7 +99,7 @@ namespace JakePerry.ReverseEnumeration.Tests
         public void TestMethod_ExceptionOnCollectionModified()
         {
             var list = new List<string>(GetAbcArray());
-            var reverseEnumerable = new ListReverseEnumerable<string>(list);
+            var reverseEnumerable = new ImmutableListReverseEnumerable<string>(list);
 
             foreach (var obj in reverseEnumerable)
             {
@@ -113,7 +113,7 @@ namespace JakePerry.ReverseEnumeration.Tests
         public void TestMethod_ExceptionOnCollectionModifiedAtEnd()
         {
             var list = new List<string>(GetAbcArray());
-            var reverseEnumerable = new ListReverseEnumerable<string>(list);
+            var reverseEnumerable = new ImmutableListReverseEnumerable<string>(list);
 
             var firstElement = list[0];
 
@@ -133,7 +133,7 @@ namespace JakePerry.ReverseEnumeration.Tests
         public void TestMethod_ExceptionOnResetModified()
         {
             var list = new List<string>(GetAbcArray());
-            var reverseEnumerator = new ListReverseEnumerable<string>(list).GetEnumerator();
+            var reverseEnumerator = new ImmutableListReverseEnumerable<string>(list).GetEnumerator();
 
             try
             {

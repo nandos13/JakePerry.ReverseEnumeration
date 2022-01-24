@@ -1,12 +1,13 @@
 ﻿using BenchmarkDotNet.Running;
 
-namespace JakePerry.ReverseEnumerable.Benchmarks
+namespace JakePerry.ReverseEnumeration.Benchmarks
 {
     public class BenchmarkConsoleApp
     {
         static void Main(string[] args)
         {
-            var results = BenchmarkRunner.Run<ReverseEnumerableBenchmarks>();
+            BenchmarkRunner.Run<ListBenchmarks>();
+            BenchmarkRunner.Run<ArraySegmentBenchmarks>();
         }
     }
 }
